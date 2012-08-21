@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>gravitousity</title>
+        <style>
+            #canvas
+            {
+                background-color: black;
+            }
+            html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0px;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" width="600" height="600">
+            Dein Browser kann diese Grafik nicht darstellen.
+        </canvas>
+        <script type="text/javascript" src="vector.js"></script>
+        <script type="text/javascript">
+            var WIDTH;
+            var HEIGHT;
+            var ctx;
+            var canvas;
+            var mouse_x = 300, mouse_y = 300;
+            var mouseState = false;
+            var keyState = new Array();
+
+            function attractor(x,y,m)
+            {
+                return {
+                    position: $V(x,y),
+                    m: m || Math.floor((Math.random()*10)+1),
+                    draw: function()
+                    {
+                        circle(this.position.x,this.position.y,10,'#39F');
+                    }
+                }
+            }
+
+            function particle(x,y,vx,vy)
+            {
+                return {
+                    position: $V(x,y),
+                    acceleration: $V(vx,vy),
+                    draw: function()
+                    {
+                        circle(this.position.x,this.position.y,1,'#FFF');
+                    }
+                };
+            }
+
+            var attractors = Array();
+            var particles = Array();
+
+            function init() {
+                canvas = document.getElementById("canvas");
+
+                if(!canvas.getContext){
+                    return;
+                }
+
+                var offsetX=0, offsetY=0;
+
+                for(var obj = canvas; obj != null; obj = obj.offsetParent) {
+                    offsetX += obj.scrollLeft - obj.offsetLeft;
+                    offsetY += obj.scrollTop - obj.offsetTop;
+                }
+
+                canvas.addEventListener("mousemove", function(e) {
+                    mouse_x = e.x + offsetX;
+                    mouse_y = e.y + offsetY;
+                }, true);
+
+                canvas.addEventListener("mousedown", function(e) {
+                    if(e.button == 1) attractors.push(new attractor(e.offsetX,e.offsetY,5));
+                }, true);
+
+                canvas.addEventListener("mouseup", function(e) {
+                    if(e.button == 0) mouseState = false;
+                }, true);
+
+                canvas.addEventListener("mousedown", function(e) {
+                    if(e.button == 0) mouseState = true;
+                }, true);
+
+                ctx = canvas.getContext("2d");
+                WIDTH = canvas.width;
+                HEIGHT = canvas.height;
+
+                return setInterval(draw, 10);
+            }
+
+            function circle(x,y,r,color) {
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI*2, true);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            function clear() {
+                ctx.clearRect(0, 0, WIDTH, HEIGHT);
+            }
+
+            document.onkeydown = function (e) {
+                keyState[e.which] = true;
+                if(e.which == 65)
+                {
+                    attractors.push(new attractor(mouse_x,mouse_y,5));
+                }
+            };
+
+            document.onkeyup = function (e) {
+                keyState[e.which] = false;
+            };
+
+            function draw() {
+                clear();
+
+                if(mouseState == true)
+                {
+                    particles.push(new particle(
+                        mouse_x,
+                        mouse_y,
+                        Math.floor((Math.random()*20)-10)*0.02,
+                        Math.floor((Math.random()*20)-10)*0.02
+                    ));
+                }
+
+                if(keyState[46] == true || keyState[8] == true) {
+                    particles = new Array();
+                    attractors = new Array();
+                }
+
+                if(keyState[80] == true) {
+                    particles.push(new particle(
+                        mouse_x,
+                        mouse_y,
+                        Math.floor((Math.random()*20)-10)*0.02,
+                        Math.floor((Math.random()*20)-10)*0.02
+                    ));
+                }
+
+                for(var i=0;i<attractors.length;i++)
+                {
+                    attractors[i].draw();
+                }
+
+                for(var i=0;i<particles.length;i++)
+                {
+                    for(var j=0;j<attractors.length;j++)
+                    {
+                        var r = particles[i].position.distanceFrom(attractors[j].position);
+                        var ga = particles[i]
+                                .position
+                                .vectorTo(
+                                    attractors[j].position
+                                )
+                                .unitVector()
+                                .multiply(
+                                    attractors[j].m / (r*r)
+                                );
+                        particles[i].acceleration = particles[i].acceleration.add(ga);
+                    }
+                    particles[i].position = particles[i].position.add(particles[i].acceleration);
+                    particles[i].draw();
+
+                    if(
+                       particles[i].position.x < 0 ||
+                       particles[i].position.x > WIDTH ||
+                       particles[i].position.y < 0 ||
+                       particles[i].position.y > HEIGHT
+                    )
+                    {
+                        particles.splice(i, 1);
+                    }
+                }
+                ctx.clearRect(0, 0, 80, 40);
+                ctx.fillStyle = '#3C6';
+                ctx.fillText("particles: "+particles.length, 10, 20);
+                ctx.fillText("attractors: "+attractors.length, 10, 30);
+            }
+            init();
+        </script>
+    </body>
+</html>
