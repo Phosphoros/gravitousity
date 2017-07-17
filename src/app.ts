@@ -38,15 +38,21 @@ export class App {
     }, true);
 
     this.canvas.addEventListener('mousedown', (e) => {
-      if (e.button === 1) { this.attractors.push(new Attractor(e.offsetX, e.offsetY, this.settings.color, 5)); }
+      if (e.button === 1) {
+        this.attractors.push(new Attractor(e.offsetX, e.offsetY, this.settings.color, 5));
+      }
     }, true);
 
     this.canvas.addEventListener('mouseup', (e) => {
-      if (e.button === 0) { this.mouseState = false; }
+      if (e.button === 0) {
+        this.mouseState = false;
+      }
     }, true);
 
     this.canvas.addEventListener('mousedown', (e) => {
-      if (e.button === 0) { this.mouseState = true; }
+      if (e.button === 0) {
+        this.mouseState = true;
+      }
     }, true);
 
     this.ctx = this.canvas.getContext('2d');
@@ -55,7 +61,7 @@ export class App {
 
     document.onkeydown = (e) => {
       this.keyState[e.which] = true;
-      if (e.which === 65) {
+      if (e.which === 65) { // press a
         this.attractors.push(new Attractor(this.mouse_x, this.mouse_y, this.settings.color, 5));
       }
     };
@@ -91,7 +97,7 @@ export class App {
       this.attractors = [];
     }
 
-    // add new particle on mittle mouse click
+    // add new particle on pressing p
     if (this.keyState[80] === true) {
       this.particles.push(new Particle(
         this.mouse_x,
