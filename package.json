@@ -1,0 +1,42 @@
+{
+  "name": "gravitousity",
+  "version": "1.0.0",
+  "description": "gravitousity",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": " webpack-dev-server",
+    "lint": "tslint --type-check --project tsconfig.json src/**/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sclausen/gravitousity.git"
+  },
+  "author": "Sebastian Clausen <sebastian.clausen@bilfinger.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sclausen/gravitousity/issues"
+  },
+  "homepage": "https://github.com/sclausen/gravitousity#readme",
+  "devDependencies": {
+    "@types/dat-gui": "^0.6.3",
+    "css-loader": "^0.28.4",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "html-loader": "^0.4.5",
+    "html-webpack-plugin": "^2.29.0",
+    "http-server": "^0.10.0",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.18.2",
+    "ts-loader": "^2.3.0",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.1",
+    "uglifyjs-webpack-plugin": "^0.4.6",
+    "webpack": "^3.3.0",
+    "webpack-dev-server": "^2.5.1"
+  },
+  "dependencies": {
+    "dat.gui": "git://github.com/sclausen/dat.gui.git#ca04d85692dbbc08210129d09b472ecdbc5eeebc"
+  }
+}
