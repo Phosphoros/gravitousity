@@ -3,16 +3,19 @@ import Circle from './shapes';
 
 export default class Particle {
   public position: Vector2D;
-  public acceleration: Vector2D;
-  public color = '#FFF';
+  public velocity: Vector2D;
+  public color: string;
+  public m: number;
 
-  constructor(x: number, y: number, vx: number, vy: number, color: string) {
-    this.position = Vector2D.create(x, y);
-    this.acceleration = Vector2D.create(vx, vy);
+  constructor(x: number, y: number, vx: number, vy: number, m: number = 1, color: string = '#FFF') {
+    this.position = new Vector2D(x, y);
+    this.velocity = new Vector2D(vx, vy);
     this.color = color;
+    this.m = m;
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    Circle.draw(ctx, this.position.x, this.position.y, 1, this.color);
+    const r = Math.sqrt(this.m / Math.PI);
+    Circle.draw(ctx, this.position.x, this.position.y, r, this.color);
   }
 }

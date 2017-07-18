@@ -6,7 +6,7 @@ export default class Attractor {
   public color: string;
 
   constructor(x: number, y: number, color: string, public m?: number, ) {
-    this.position = Vector2D.create(x, y);
+    this.position = new Vector2D(x, y);
     this.color = color;
     this.m = m ? m : Math.floor((Math.random() * 10) + 1);
   }
