@@ -3,8 +3,6 @@ import Attractor from './attractor';
 import Particle from './particle';
 import { clear } from './shapes';
 
-import * as dat from 'dat.gui';
-
 export enum AppState {
   Stopped = 'stopped',
   Running = 'running'
@@ -24,14 +22,6 @@ export class App {
   private mouseState: boolean;
   private keyState: boolean[] = [];
   private state = AppState.Stopped;
-  private settings = {
-    color: '#FFFFFF',
-    mass: 1,
-    clearView: () => {
-      this.particles = [];
-      this.attractors = [];
-    }
-  };
 
   public init() {
     this.canvas = <HTMLCanvasElement>document.getElementById('canvas');
@@ -46,14 +36,14 @@ export class App {
 
     this.canvas.addEventListener('mousedown', (e) => {
       if (e.button === 1) {
-        // this.attractors.push(new Attractor(e.offsetX, e.offsetY, this.settings.color, 5));
+        // this.attractors.push(new Attractor(e.offsetX, e.offsetY, '#FFF', 5));
         this.particles.push(new Particle(
           this.mouse_x,
           this.mouse_y,
           0,
           0,
-          this.settings.mass,
-          this.settings.color
+          1,
+          '#FFF'
         ));
       }
     }, true);
@@ -77,7 +67,7 @@ export class App {
     document.onkeydown = (e) => {
       this.keyState[e.which] = true;
       if (e.which === 65) { // press a
-        this.attractors.push(new Attractor(this.mouse_x, this.mouse_y, this.settings.color, 5));
+        this.attractors.push(new Attractor(this.mouse_x, this.mouse_y, '#FFF', 5));
       } else if (e.which === 32) {
         this.state = this.state === AppState.Stopped ? AppState.Running : AppState.Stopped;
       }
@@ -86,11 +76,6 @@ export class App {
     document.onkeyup = (e) => {
       this.keyState[e.which] = false;
     };
-
-    const gui = new dat.GUI();
-    gui.addColor(this.settings, 'color');
-    gui.add(this.settings, 'clearView');
-    gui.add(this.settings, 'mass');
 
     // for (let k = 0; k < 1000; k++) {
     //   const x = Math.random() * this.width;
@@ -112,7 +97,7 @@ export class App {
         Math.floor((Math.random() * 20) - 10) * 0.02,
         Math.floor((Math.random() * 20) - 10) * 0.02,
         1,
-        this.settings.color
+        '#FFF'
       ));
     }
 
@@ -130,7 +115,7 @@ export class App {
         Math.floor((Math.random() * 20) - 10) * 0.02, // randomize initial velocity
         Math.floor((Math.random() * 20) - 10) * 0.02,
         1,
-        this.settings.color
+        '#FFF'
       ));
     }
 
